@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: kindred-ui
+    env: node
+    buildCommand: npm install && npm run build
+    startCommand: npm run preview
+    envVars:
+      - key: NODE_VERSION
+        value: 18.16.0
+    plan: free
+    autoDeploy: true
+    buildFilter:
+      paths:
+        - ./**
