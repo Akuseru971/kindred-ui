@@ -32,17 +32,15 @@ export default function App() {
   }
 
   return (
-   <div className="min-h-screen bg-gradient-to-b from-black to-gray-900 text-white ...
-
-<motion.h1
-  initial={{ opacity: 0, y: -40 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 1 }}
-  className="text-5xl font-serif text-center mb-6 text-purple-300 drop-shadow-lg"
->
-  Kindred's Lore Whisper
-</motion.h1>
-
+    <div className="min-h-screen bg-gradient-to-b from-black to-gray-900 text-white flex flex-col items-center justify-center p-8">
+      <motion.h1
+        initial={{ opacity: 0, y: -40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1 }}
+        className="text-5xl font-serif text-center mb-6 text-purple-300 drop-shadow-lg"
+      >
+        Kindred's Lore Whisper
+      </motion.h1>
 
       <motion.p
         initial={{ opacity: 0 }}
