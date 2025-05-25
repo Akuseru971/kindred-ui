@@ -6,6 +6,8 @@ export default function App() {
   const [lore, setLore] = useState("");
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [genre, setGenre] = useState("Man");
+  const [role, setRole] = useState("mid");
 
   async function generateLore() {
     setLoading(true);
@@ -19,11 +21,20 @@ export default function App() {
       const response = await fetch("https://lambandwolf-lore-app.onrender.com/api/lore", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pseudo }),
+        body: JSON.stringify({
+          pseudo: pseudo || "Unnamed",
+          genre: genre || "unknown",
+          role: role || "unknown",
+        }),
       });
+
       const data = await response.json();
+
+      if (!data.lore) throw new Error("No lore returned");
+
       typeWriterEffect(data.lore);
     } catch (err) {
+      console.error("Lore error:", err);
       setLore("The voices did not answer...");
       setLoading(false);
     }
@@ -97,6 +108,29 @@ export default function App() {
         >
           Enter your summoner name, and let Lamb and Wolf reveal your tale...
         </motion.p>
+
+        <div className="flex flex-col sm:flex-row gap-4 items-center mb-6">
+          <select
+            value={genre}
+            onChange={(e) => setGenre(e.target.value)}
+            className="bg-white text-black px-4 py-2 rounded-xl w-36 text-lg shadow-lg focus:outline-none"
+          >
+            <option value="Man">Man</option>
+            <option value="Woman">Woman</option>
+          </select>
+
+          <select
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+            className="bg-white text-black px-4 py-2 rounded-xl w-36 text-lg shadow-lg focus:outline-none"
+          >
+            <option value="top">Top</option>
+            <option value="jungle">Jungle</option>
+            <option value="mid">Mid</option>
+            <option value="adc">ADC</option>
+            <option value="support">Support</option>
+          </select>
+        </div>
 
         <div className="flex flex-col sm:flex-row gap-4 items-center">
           <input
