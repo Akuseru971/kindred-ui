@@ -40,7 +40,8 @@ export default function App() {
         transition={{ duration: 1 }}
         className="text-5xl font-serif text-center mb-6 text-purple-300 drop-shadow-lg"
       >
-        Kindred's Lore Whisper
+        "Kindred's Lore Whisper"
+
       </motion.h1>
 
       <motion.p
