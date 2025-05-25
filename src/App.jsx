@@ -32,7 +32,8 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-black bg-[url('/bg-dark.jpg')] bg-cover bg-center text-white flex flex-col items-center justify-center px-4">
+   <div className="min-h-screen bg-gradient-to-b from-black to-gray-900 text-white ...
+
       <motion.h1
         initial={{ opacity: 0, y: -40 }}
         animate={{ opacity: 1, y: 0 }}
