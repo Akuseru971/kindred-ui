@@ -1,34 +1,24 @@
-import { useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 
 export default function App() {
   const [pseudo, setPseudo] = useState("");
   const [genre, setGenre] = useState("Man");
-  const [role, setRole] = useState("top");
+  const [role, setRole] = useState("mid");
   const [lore, setLore] = useState("");
   const [loading, setLoading] = useState(false);
-  const [preview, setPreview] = useState("");
-  const [audioReady, setAudioReady] = useState(false);
-  const [music] = useState(() => new Audio("/Kindred.mp3"));
-
-  useEffect(() => {
-    // Initialise musique après premier clic utilisateur
-    const enableAudio = () => {
-      music.volume = 0.4;
-      music.currentTime = 0;
-      music.play().catch((err) => {
-        console.warn("Autoplay music blocked:", err);
-      });
-      document.removeEventListener("click", enableAudio);
-    };
-    document.addEventListener("click", enableAudio);
-    return () => document.removeEventListener("click", enableAudio);
-  }, [music]);
+  const [audioUrl, setAudioUrl] = useState(null);
+  const audioRef = useRef(null);
 
   async function generateLore() {
     setLoading(true);
     setLore("Summoning Kindred...");
-    setAudioReady(false);
+    setAudioUrl(null);
+
+    // Joue la musique
+    if (audioRef.current) {
+      audioRef.current.play().catch(() => {});
+    }
 
     try {
       const response = await fetch("https://lambandwolf-lore-app.onrender.com/api/lore", {
@@ -36,36 +26,12 @@ export default function App() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ pseudo, genre, role }),
       });
-
       const data = await response.json();
-      console.log("Preview sent:", data.preview);
-      setPreview(data.preview);
       typeWriterEffect(data.lore);
-      playAudioPreview(data.preview);
     } catch (err) {
-      console.error("Lore fetch error:", err);
       setLore("The voices did not answer...");
-    }
-  }
-
-  async function playAudioPreview(text) {
-    if (!text) return;
-
-    try {
-      const response = await fetch("https://lambandwolf-lore-app.onrender.com/api/preview-audio", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text }),
-      });
-
-      const audioBlob = await response.blob();
-      console.log("Audio blob received:", audioBlob);
-      const audioUrl = URL.createObjectURL(audioBlob);
-      const audio = new Audio(audioUrl);
-      audio.play();
-      setAudioReady(true);
-    } catch (err) {
-      console.error("Audio preview error:", err);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -78,20 +44,40 @@ export default function App() {
     draw();
   }
 
+  async function generatePreviewAudio() {
+    try {
+      const response = await fetch("https://lambandwolf-lore-app.onrender.com/api/audio-preview", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pseudo }),
+      });
+
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      setAudioUrl(url);
+    } catch (err) {
+      console.error("Preview audio failed", err);
+    }
+  }
+
   return (
-    <div className="relative min-h-screen text-white overflow-hidden flex flex-col items-center justify-center p-8">
+    <div className="relative min-h-screen bg-black text-white flex flex-col items-center justify-center p-4 overflow-hidden">
+      {/* Vidéo de fond */}
       <video
+        className="absolute top-0 left-0 w-full h-full object-cover z-0"
         autoPlay
-        loop
         muted
-        className="absolute w-full h-full object-cover z-0"
+        loop
+        playsInline
       >
         <source src="/bg.mp4" type="video/mp4" />
       </video>
 
-      <div className="absolute inset-0 bg-black/60 z-0"></div>
+      {/* Audio de fond */}
+      <audio ref={audioRef} src="/kindred-theme.mp3" preload="auto" />
 
-      <div className="z-10 w-full max-w-4xl text-center">
+      {/* Contenu */}
+      <div className="relative z-10 max-w-3xl w-full flex flex-col items-center text-center">
         <motion.h1
           initial={{ opacity: 0, y: -40 }}
           animate={{ opacity: 1, y: 0 }}
@@ -105,36 +91,37 @@ export default function App() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5, duration: 1 }}
-          className="text-lg text-gray-300 mb-8 max-w-xl mx-auto"
+          className="text-lg text-gray-300 mb-8 max-w-xl"
         >
-          Enter your summoner name, select your path, and let Lamb and Wolf whisper your fate...
+          Enter your summoner name, choose your essence, and let Lamb and Wolf tell your tale...
         </motion.p>
 
-        <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-4 items-center mb-4">
+        {/* Formulaire */}
+        <div className="flex flex-col sm:flex-row gap-4 items-center mb-6">
           <input
             value={pseudo}
             onChange={(e) => setPseudo(e.target.value)}
             placeholder="Your Summoner Name"
-            className="bg-white text-black px-4 py-2 rounded-xl w-72 text-lg shadow-lg focus:outline-none"
+            className="bg-white text-black px-4 py-2 rounded-xl w-64 text-lg shadow-lg focus:outline-none"
           />
           <select
             value={genre}
             onChange={(e) => setGenre(e.target.value)}
-            className="bg-white text-black px-4 py-2 rounded-xl w-36 text-lg shadow-lg"
+            className="bg-white text-black px-3 py-2 rounded-xl shadow"
           >
-            <option>Man</option>
-            <option>Woman</option>
+            <option value="Man">Man</option>
+            <option value="Woman">Woman</option>
           </select>
           <select
             value={role}
             onChange={(e) => setRole(e.target.value)}
-            className="bg-white text-black px-4 py-2 rounded-xl w-36 text-lg shadow-lg"
+            className="bg-white text-black px-3 py-2 rounded-xl shadow"
           >
-            <option>top</option>
-            <option>jungle</option>
-            <option>mid</option>
-            <option>adc</option>
-            <option>support</option>
+            <option value="top">Top</option>
+            <option value="jungle">Jungle</option>
+            <option value="mid">Mid</option>
+            <option value="adc">ADC</option>
+            <option value="support">Support</option>
           </select>
           <button
             onClick={generateLore}
@@ -145,17 +132,36 @@ export default function App() {
           </button>
         </div>
 
-        <pre className="mt-6 max-w-3xl w-full bg-black/70 p-6 rounded-2xl text-sm sm:text-base text-gray-100 border border-purple-500 whitespace-pre-wrap shadow-xl mx-auto">
+        {/* Barre de chargement */}
+        {loading && (
+          <div className="w-full h-1 bg-purple-900 mt-2 mb-6 rounded overflow-hidden">
+            <motion.div
+              className="h-full bg-purple-500"
+              initial={{ width: 0 }}
+              animate={{ width: "100%" }}
+              transition={{ duration: 3, ease: "easeInOut" }}
+            />
+          </div>
+        )}
+
+        {/* Lore affiché */}
+        <pre className="mt-6 max-w-3xl w-full bg-black/70 p-6 rounded-2xl text-sm sm:text-base text-gray-100 border border-purple-500 whitespace-pre-wrap shadow-xl">
           {lore}
         </pre>
 
-        {audioReady && (
-          <button
-            onClick={() => playAudioPreview(preview)}
-            className="mt-6 bg-purple-700 hover:bg-purple-900 px-6 py-2 rounded-xl text-white font-medium text-lg shadow-lg"
-          >
-            🔊 Generate my audio
-          </button>
+        {/* Audio preview */}
+        {lore && !loading && (
+          <div className="mt-6 flex flex-col items-center gap-2">
+            <button
+              onClick={generatePreviewAudio}
+              className="bg-purple-700 hover:bg-purple-900 px-5 py-2 rounded-xl text-white font-medium shadow-md transition"
+            >
+              Generate Preview Audio
+            </button>
+            {audioUrl && (
+              <audio controls src={audioUrl} className="mt-2" />
+            )}
+          </div>
         )}
       </div>
     </div>
