@@ -10,16 +10,18 @@ export default function App() {
   const [preview, setPreview] = useState("");
   const [audioReady, setAudioReady] = useState(false);
 
-  const music = new Audio("/Kindred.mp3");
-  music.volume = 0.4;
-
   async function generateLore() {
     setLoading(true);
     setLore("Summoning Kindred...");
     setAudioReady(false);
 
+    // Lecture musique (doit être dans interaction utilisateur)
+    const music = new Audio("/Kindred.mp3");
+    music.volume = 0.4;
     music.currentTime = 0;
-    music.play();
+    music.play().catch((err) => {
+      console.warn("Music autoplay was blocked:", err);
+    });
 
     try {
       const response = await fetch("https://lambandwolf-lore-app.onrender.com/api/lore", {
@@ -29,15 +31,19 @@ export default function App() {
       });
 
       const data = await response.json();
+      console.log("Preview sent:", data.preview);
       setPreview(data.preview);
       typeWriterEffect(data.lore);
       playAudioPreview(data.preview);
     } catch (err) {
+      console.error("Lore fetch error:", err);
       setLore("The voices did not answer...");
     }
   }
 
   async function playAudioPreview(text) {
+    if (!text) return;
+
     try {
       const response = await fetch("https://lambandwolf-lore-app.onrender.com/api/preview-audio", {
         method: "POST",
@@ -46,6 +52,7 @@ export default function App() {
       });
 
       const audioBlob = await response.blob();
+      console.log("Audio blob received:", audioBlob);
       const audioUrl = URL.createObjectURL(audioBlob);
       const audio = new Audio(audioUrl);
       audio.play();
@@ -138,7 +145,6 @@ export default function App() {
           {lore}
         </pre>
 
-        {/* Generate full audio (preview only for now) */}
         {audioReady && (
           <button
             onClick={() => playAudioPreview(preview)}
