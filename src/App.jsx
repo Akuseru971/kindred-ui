@@ -1,40 +1,34 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { motion } from "framer-motion";
 
 export default function App() {
   const [pseudo, setPseudo] = useState("");
-  const [lore, setLore] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [progress, setProgress] = useState(0);
   const [genre, setGenre] = useState("Man");
   const [role, setRole] = useState("mid");
+  const [lore, setLore] = useState("");
+  const [preview, setPreview] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const audioRef = useRef(null);
 
   async function generateLore() {
     setLoading(true);
     setLore("Summoning Kindred...");
+    setPreview("");
     setProgress(0);
     simulateProgress();
-
-    document.querySelector("audio")?.play();
 
     try {
       const response = await fetch("https://lambandwolf-lore-app.onrender.com/api/lore", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          pseudo: pseudo || "Unnamed",
-          genre: genre || "unknown",
-          role: role || "unknown",
-        }),
+        body: JSON.stringify({ pseudo, genre, role }),
       });
 
       const data = await response.json();
-
-      if (!data.lore) throw new Error("No lore returned");
-
+      setPreview(data.preview || "");
       typeWriterEffect(data.lore);
     } catch (err) {
-      console.error("Lore error:", err);
       setLore("The voices did not answer...");
       setLoading(false);
     }
@@ -63,23 +57,34 @@ export default function App() {
     draw();
   }
 
+  async function playPreviewAudio() {
+    try {
+      const response = await fetch("https://lambandwolf-lore-app.onrender.com/api/preview-audio", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: preview }),
+      });
+
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      if (audioRef.current) {
+        audioRef.current.src = url;
+        audioRef.current.play();
+      }
+    } catch (err) {
+      alert("Wolf’s voice could not be summoned...");
+    }
+  }
+
   return (
     <>
-      <video
-        autoPlay
-        muted
-        loop
-        playsInline
-        className="fixed top-0 left-0 w-full h-full object-cover z-0"
-      >
+      <video autoPlay muted loop playsInline className="fixed top-0 left-0 w-full h-full object-cover z-0">
         <source src="/kindred-bg.mp4" type="video/mp4" />
       </video>
 
       <div className="fixed top-0 left-0 w-full h-full bg-black/70 z-0" />
 
-      <audio autoPlay loop className="hidden">
-        <source src="/kindred-theme.mp3" type="audio/mpeg" />
-      </audio>
+      <audio ref={audioRef} className="hidden" />
 
       <div className="min-h-screen relative z-10 text-white flex flex-col items-center justify-center p-8 font-garamond">
         {loading && (
@@ -147,6 +152,15 @@ export default function App() {
             Whisper
           </button>
         </div>
+
+        {preview && !loading && (
+          <button
+            onClick={playPreviewAudio}
+            className="mt-6 px-4 py-2 bg-purple-500 hover:bg-purple-700 rounded-xl text-white font-medium shadow-md"
+          >
+            🔊 Listen to Wolf
+          </button>
+        )}
 
         <pre className="mt-10 max-w-3xl w-full bg-black/70 p-6 rounded-2xl text-sm sm:text-base text-gray-100 border border-purple-500 whitespace-pre-wrap shadow-xl">
           {lore}
