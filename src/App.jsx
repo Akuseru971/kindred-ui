@@ -9,6 +9,10 @@ export default function App() {
   async function generateLore() {
     setLoading(true);
     setLore("Summoning Kindred...");
+
+    // ▶️ Lance la musique (certains navigateurs nécessitent une interaction utilisateur)
+    document.querySelector("audio")?.play();
+
     try {
       const response = await fetch("https://lambandwolf-lore-app.onrender.com/api/lore", {
         method: "POST",
@@ -44,8 +48,13 @@ export default function App() {
         <source src="/kindred-bg.mp4" type="video/mp4" />
       </video>
 
-      {/* 🔲 Overlay sombre pour lisibilité */}
+      {/* 🔲 Overlay sombre */}
       <div className="fixed top-0 left-0 w-full h-full bg-black/70 z-0" />
+
+      {/* 🎵 Musique d'ambiance */}
+      <audio autoPlay loop className="hidden">
+        <source src="/kindred-theme.mp3" type="audio/mpeg" />
+      </audio>
 
       {/* 🧾 Interface */}
       <div className="min-h-screen relative z-10 text-white flex flex-col items-center justify-center p-8">
