@@ -10,7 +10,7 @@ export default function App() {
     setLoading(true);
     setLore("Summoning Kindred...");
     try {
-const response = await fetch("https://lambandwolf-lore-app.onrender.com/api/lore", {
+      const response = await fetch("https://lambandwolf-lore-app.onrender.com/api/lore", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ pseudo }),
@@ -32,44 +32,61 @@ const response = await fetch("https://lambandwolf-lore-app.onrender.com/api/lore
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black to-gray-900 text-white flex flex-col items-center justify-center p-8">
-      <motion.h1
-        initial={{ opacity: 0, y: -40 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
-        className="text-5xl font-serif text-center mb-6 text-purple-300 drop-shadow-lg"
+    <>
+      {/* 🎥 Fond vidéo */}
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        className="fixed top-0 left-0 w-full h-full object-cover z-0"
       >
-        Kindred's Lore Whisper
-      </motion.h1>
+        <source src="/kindred-bg.mp4" type="video/mp4" />
+      </video>
 
-      <motion.p
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.5, duration: 1 }}
-        className="text-lg text-center text-gray-300 mb-8 max-w-xl"
-      >
-        Enter your summoner name, and let Lamb and Wolf reveal your tale...
-      </motion.p>
+      {/* 🔲 Overlay sombre pour lisibilité */}
+      <div className="fixed top-0 left-0 w-full h-full bg-black/70 z-0" />
 
-      <div className="flex flex-col sm:flex-row gap-4 items-center">
-        <input
-          value={pseudo}
-          onChange={(e) => setPseudo(e.target.value)}
-          placeholder="Your Summoner Name"
-          className="bg-white text-black px-4 py-2 rounded-xl w-72 text-lg shadow-lg focus:outline-none"
-        />
-        <button
-          onClick={generateLore}
-          disabled={loading || !pseudo.trim()}
-          className="bg-purple-600 hover:bg-purple-800 px-6 py-2 rounded-xl text-white font-semibold text-lg shadow-md transition-all"
+      {/* 🧾 Interface */}
+      <div className="min-h-screen relative z-10 text-white flex flex-col items-center justify-center p-8">
+        <motion.h1
+          initial={{ opacity: 0, y: -40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+          className="text-5xl font-serif text-center mb-6 text-purple-300 drop-shadow-lg"
         >
-          Whisper
-        </button>
-      </div>
+          Kindred's Lore Whisper
+        </motion.h1>
 
-      <pre className="mt-10 max-w-3xl w-full bg-black/70 p-6 rounded-2xl text-sm sm:text-base text-gray-100 border border-purple-500 whitespace-pre-wrap shadow-xl">
-        {lore}
-      </pre>
-    </div>
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5, duration: 1 }}
+          className="text-lg text-center text-gray-300 mb-8 max-w-xl"
+        >
+          Enter your summoner name, and let Lamb and Wolf reveal your tale...
+        </motion.p>
+
+        <div className="flex flex-col sm:flex-row gap-4 items-center">
+          <input
+            value={pseudo}
+            onChange={(e) => setPseudo(e.target.value)}
+            placeholder="Your Summoner Name"
+            className="bg-white text-black px-4 py-2 rounded-xl w-72 text-lg shadow-lg focus:outline-none"
+          />
+          <button
+            onClick={generateLore}
+            disabled={loading || !pseudo.trim()}
+            className="bg-purple-600 hover:bg-purple-800 px-6 py-2 rounded-xl text-white font-semibold text-lg shadow-md transition-all"
+          >
+            Whisper
+          </button>
+        </div>
+
+        <pre className="mt-10 max-w-3xl w-full bg-black/70 p-6 rounded-2xl text-sm sm:text-base text-gray-100 border border-purple-500 whitespace-pre-wrap shadow-xl">
+          {lore}
+        </pre>
+      </div>
+    </>
   );
 }
