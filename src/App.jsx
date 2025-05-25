@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
 export default function App() {
@@ -9,19 +9,26 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [preview, setPreview] = useState("");
   const [audioReady, setAudioReady] = useState(false);
+  const [music] = useState(() => new Audio("/Kindred.mp3"));
+
+  useEffect(() => {
+    // Initialise musique après premier clic utilisateur
+    const enableAudio = () => {
+      music.volume = 0.4;
+      music.currentTime = 0;
+      music.play().catch((err) => {
+        console.warn("Autoplay music blocked:", err);
+      });
+      document.removeEventListener("click", enableAudio);
+    };
+    document.addEventListener("click", enableAudio);
+    return () => document.removeEventListener("click", enableAudio);
+  }, [music]);
 
   async function generateLore() {
     setLoading(true);
     setLore("Summoning Kindred...");
     setAudioReady(false);
-
-    // Lecture musique (doit être dans interaction utilisateur)
-    const music = new Audio("/Kindred.mp3");
-    music.volume = 0.4;
-    music.currentTime = 0;
-    music.play().catch((err) => {
-      console.warn("Music autoplay was blocked:", err);
-    });
 
     try {
       const response = await fetch("https://lambandwolf-lore-app.onrender.com/api/lore", {
@@ -73,7 +80,6 @@ export default function App() {
 
   return (
     <div className="relative min-h-screen text-white overflow-hidden flex flex-col items-center justify-center p-8">
-      {/* Background Video */}
       <video
         autoPlay
         loop
@@ -83,10 +89,8 @@ export default function App() {
         <source src="/bg.mp4" type="video/mp4" />
       </video>
 
-      {/* Overlay */}
       <div className="absolute inset-0 bg-black/60 z-0"></div>
 
-      {/* Content */}
       <div className="z-10 w-full max-w-4xl text-center">
         <motion.h1
           initial={{ opacity: 0, y: -40 }}
