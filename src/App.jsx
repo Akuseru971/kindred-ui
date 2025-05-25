@@ -5,12 +5,14 @@ export default function App() {
   const [pseudo, setPseudo] = useState("");
   const [lore, setLore] = useState("");
   const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   async function generateLore() {
     setLoading(true);
     setLore("Summoning Kindred...");
+    setProgress(0);
+    simulateProgress();
 
-    // ▶️ Lance la musique (certains navigateurs nécessitent une interaction utilisateur)
     document.querySelector("audio")?.play();
 
     try {
@@ -23,21 +25,35 @@ export default function App() {
       typeWriterEffect(data.lore);
     } catch (err) {
       setLore("The voices did not answer...");
+      setLoading(false);
     }
+  }
+
+  function simulateProgress() {
+    let i = 0;
+    const interval = setInterval(() => {
+      i += Math.random() * 10;
+      setProgress(Math.min(i, 100));
+      if (i >= 100) clearInterval(interval);
+    }, 200);
   }
 
   function typeWriterEffect(text, i = 0) {
     setLore("");
     function draw() {
       setLore((prev) => prev + text.charAt(i));
-      if (i < text.length - 1) setTimeout(() => draw(++i), 25);
+      if (i < text.length - 1) {
+        setTimeout(() => draw(++i), 25);
+      } else {
+        setProgress(100);
+        setLoading(false);
+      }
     }
     draw();
   }
 
   return (
     <>
-      {/* 🎥 Fond vidéo */}
       <video
         autoPlay
         muted
@@ -48,21 +64,27 @@ export default function App() {
         <source src="/kindred-bg.mp4" type="video/mp4" />
       </video>
 
-      {/* 🔲 Overlay sombre */}
       <div className="fixed top-0 left-0 w-full h-full bg-black/70 z-0" />
 
-      {/* 🎵 Musique d'ambiance */}
       <audio autoPlay loop className="hidden">
         <source src="/kindred-theme.mp3" type="audio/mpeg" />
       </audio>
 
-      {/* 🧾 Interface */}
-      <div className="min-h-screen relative z-10 text-white flex flex-col items-center justify-center p-8">
+      <div className="min-h-screen relative z-10 text-white flex flex-col items-center justify-center p-8 font-garamond">
+        {loading && (
+          <div className="w-full max-w-xl h-2 bg-gray-800 rounded-full overflow-hidden mb-6">
+            <div
+              className="h-full bg-purple-500 transition-all duration-300"
+              style={{ width: `${progress}%` }}
+            ></div>
+          </div>
+        )}
+
         <motion.h1
           initial={{ opacity: 0, y: -40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
-          className="text-5xl font-serif text-center mb-6 text-purple-300 drop-shadow-lg"
+          className="text-5xl text-center mb-6 text-purple-300 drop-shadow-lg"
         >
           Kindred's Lore Whisper
         </motion.h1>
