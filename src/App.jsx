@@ -10,7 +10,7 @@ export default function App() {
     setLoading(true);
     setLore("Summoning Kindred...");
     try {
-      const response = await fetch("/api/lore", {
+const response = await fetch("https://lambandwolf-lore-app.onrender.com/api/lore", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ pseudo }),
