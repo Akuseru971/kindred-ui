@@ -1,22 +1,16 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 
 export default function App() {
   const [pseudo, setPseudo] = useState("");
   const [genre, setGenre] = useState("Man");
-  const [role, setRole] = useState("mid");
+  const [role, setRole] = useState("top");
   const [lore, setLore] = useState("");
-  const [preview, setPreview] = useState("");
   const [loading, setLoading] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const audioRef = useRef(null);
 
   async function generateLore() {
     setLoading(true);
     setLore("Summoning Kindred...");
-    setPreview("");
-    setProgress(0);
-    simulateProgress();
 
     try {
       const response = await fetch("https://lambandwolf-lore-app.onrender.com/api/lore", {
@@ -26,146 +20,97 @@ export default function App() {
       });
 
       const data = await response.json();
-      setPreview(data.preview || "");
       typeWriterEffect(data.lore);
+      playAudioPreview(data.preview);
     } catch (err) {
       setLore("The voices did not answer...");
-      setLoading(false);
     }
   }
 
-  function simulateProgress() {
-    let i = 0;
-    const interval = setInterval(() => {
-      i += Math.random() * 10;
-      setProgress(Math.min(i, 100));
-      if (i >= 100) clearInterval(interval);
-    }, 200);
+  async function playAudioPreview(text) {
+    try {
+      const response = await fetch("https://lambandwolf-lore-app.onrender.com/api/preview-audio", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text }),
+      });
+
+      const audioBlob = await response.blob();
+      const audioUrl = URL.createObjectURL(audioBlob);
+      const audio = new Audio(audioUrl);
+      audio.play();
+    } catch (err) {
+      console.error("Audio preview error:", err);
+    }
   }
 
   function typeWriterEffect(text, i = 0) {
     setLore("");
     function draw() {
       setLore((prev) => prev + text.charAt(i));
-      if (i < text.length - 1) {
-        setTimeout(() => draw(++i), 25);
-      } else {
-        setProgress(100);
-        setLoading(false);
-      }
+      if (i < text.length - 1) setTimeout(() => draw(++i), 25);
     }
     draw();
   }
 
-  async function playPreviewAudio() {
-    try {
-      const response = await fetch("https://lambandwolf-lore-app.onrender.com/api/preview-audio", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: preview }),
-      });
-
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
-      if (audioRef.current) {
-        audioRef.current.src = url;
-        audioRef.current.play();
-      }
-    } catch (err) {
-      alert("Wolf’s voice could not be summoned...");
-    }
-  }
-
   return (
-    <>
-      <video autoPlay muted loop playsInline className="fixed top-0 left-0 w-full h-full object-cover z-0">
-        <source src="/kindred-bg.mp4" type="video/mp4" />
-      </video>
+    <div className="min-h-screen bg-gradient-to-b from-black to-gray-900 text-white flex flex-col items-center justify-center p-8">
+      <motion.h1
+        initial={{ opacity: 0, y: -40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1 }}
+        className="text-5xl font-serif text-center mb-6 text-purple-300 drop-shadow-lg"
+      >
+        Kindred's Lore Whisper
+      </motion.h1>
 
-      <div className="fixed top-0 left-0 w-full h-full bg-black/70 z-0" />
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5, duration: 1 }}
+        className="text-lg text-center text-gray-300 mb-8 max-w-xl"
+      >
+        Enter your summoner name, select your path, and let Lamb and Wolf whisper your fate...
+      </motion.p>
 
-      <audio ref={audioRef} className="hidden" />
-
-      <div className="min-h-screen relative z-10 text-white flex flex-col items-center justify-center p-8 font-garamond">
-        {loading && (
-          <div className="w-full max-w-xl h-2 bg-gray-800 rounded-full overflow-hidden mb-6">
-            <div
-              className="h-full bg-purple-500 transition-all duration-300"
-              style={{ width: `${progress}%` }}
-            ></div>
-          </div>
-        )}
-
-        <motion.h1
-          initial={{ opacity: 0, y: -40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-          className="text-5xl text-center mb-6 text-purple-300 drop-shadow-lg"
+      <div className="flex flex-col sm:flex-row gap-4 items-center mb-4">
+        <input
+          value={pseudo}
+          onChange={(e) => setPseudo(e.target.value)}
+          placeholder="Your Summoner Name"
+          className="bg-white text-black px-4 py-2 rounded-xl w-72 text-lg shadow-lg focus:outline-none"
+        />
+        <select
+          value={genre}
+          onChange={(e) => setGenre(e.target.value)}
+          className="bg-white text-black px-4 py-2 rounded-xl w-36 text-lg shadow-lg"
         >
-          Kindred's Lore Whisper
-        </motion.h1>
-
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5, duration: 1 }}
-          className="text-lg text-center text-gray-300 mb-8 max-w-xl"
+          <option>Man</option>
+          <option>Woman</option>
+        </select>
+        <select
+          value={role}
+          onChange={(e) => setRole(e.target.value)}
+          className="bg-white text-black px-4 py-2 rounded-xl w-36 text-lg shadow-lg"
         >
-          Enter your summoner name, and let Lamb and Wolf reveal your tale...
-        </motion.p>
-
-        <div className="flex flex-col sm:flex-row gap-4 items-center mb-6">
-          <select
-            value={genre}
-            onChange={(e) => setGenre(e.target.value)}
-            className="bg-white text-black px-4 py-2 rounded-xl w-36 text-lg shadow-lg focus:outline-none"
-          >
-            <option value="Man">Man</option>
-            <option value="Woman">Woman</option>
-          </select>
-
-          <select
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
-            className="bg-white text-black px-4 py-2 rounded-xl w-36 text-lg shadow-lg focus:outline-none"
-          >
-            <option value="top">Top</option>
-            <option value="jungle">Jungle</option>
-            <option value="mid">Mid</option>
-            <option value="adc">ADC</option>
-            <option value="support">Support</option>
-          </select>
-        </div>
-
-        <div className="flex flex-col sm:flex-row gap-4 items-center">
-          <input
-            value={pseudo}
-            onChange={(e) => setPseudo(e.target.value)}
-            placeholder="Your Summoner Name"
-            className="bg-white text-black px-4 py-2 rounded-xl w-72 text-lg shadow-lg focus:outline-none"
-          />
-          <button
-            onClick={generateLore}
-            disabled={loading || !pseudo.trim()}
-            className="bg-purple-600 hover:bg-purple-800 px-6 py-2 rounded-xl text-white font-semibold text-lg shadow-md transition-all"
-          >
-            Whisper
-          </button>
-        </div>
-
-        {preview && !loading && (
-          <button
-            onClick={playPreviewAudio}
-            className="mt-6 px-4 py-2 bg-purple-500 hover:bg-purple-700 rounded-xl text-white font-medium shadow-md"
-          >
-            🔊 Listen to Wolf
-          </button>
-        )}
-
-        <pre className="mt-10 max-w-3xl w-full bg-black/70 p-6 rounded-2xl text-sm sm:text-base text-gray-100 border border-purple-500 whitespace-pre-wrap shadow-xl">
-          {lore}
-        </pre>
+          <option>top</option>
+          <option>jungle</option>
+          <option>mid</option>
+          <option>adc</option>
+          <option>support</option>
+        </select>
+        <button
+          onClick={generateLore}
+          disabled={loading || !pseudo.trim()}
+          className="bg-purple-600 hover:bg-purple-800 px-6 py-2 rounded-xl text-white font-semibold text-lg shadow-md transition-all"
+        >
+          Whisper
+        </button>
       </div>
-    </>
+
+      <pre className="mt-6 max-w-3xl w-full bg-black/70 p-6 rounded-2xl text-sm sm:text-base text-gray-100 border border-purple-500 whitespace-pre-wrap shadow-xl">
+        {lore}
+      </pre>
+    </div>
   );
 }
