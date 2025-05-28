@@ -1,0 +1,70 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: 'Georgia', serif;
+  background-color: black;
+  color: white;
+}
+
+.app-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+video.background-video {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+}
+
+.content {
+  position: relative;
+  z-index: 2;
+  padding: 2rem;
+  text-align: center;
+}
+
+input, select, button {
+  padding: 10px;
+  margin: 10px;
+  background-color: #111;
+  color: white;
+  border: 1px solid white;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+button:hover {
+  background-color: #333;
+  cursor: pointer;
+}
+
+.loading-bar {
+  height: 6px;
+  width: 100%;
+  background-color: #555;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.loading-bar-fill {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, #fff, #aaa);
+  animation: loading 2s linear infinite;
+}
+
+@keyframes loading {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.audio-controls {
+  margin-top: 20px;
+}
