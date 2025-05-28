@@ -1,58 +1,44 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import ReactPlayer from "react-player";
-import "./App.css";
 
-function App() {
+const App = () => {
   const [pseudo, setPseudo] = useState("");
   const [role, setRole] = useState("mid");
   const [genre, setGenre] = useState("Man");
-  const [generatedLore, setGeneratedLore] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [audio, setAudio] = useState(null);
-  const [previewLoading, setPreviewLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [lore, setLore] = useState("");
+  const [audioUrl, setAudioUrl] = useState(null);
+  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const music = new Audio("/bg.mp3");
-    music.loop = true;
-    music.volume = 0.5;
-    setAudio(music);
-  }, []);
+  const handleLoreGeneration = async () => {
+    setLoading(true);
+    setLore("");
+    setAudioUrl(null);
+    setError(null);
 
-  const handleGenerate = async () => {
-    if (!pseudo.trim()) return;
-
-    setIsLoading(true);
-    setGeneratedLore("");
     try {
       const response = await fetch(
         "https://lambandwolf-lore-app.onrender.com/api/lore",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ pseudo, role, genre }),
+          body: JSON.stringify({ pseudo, role, genre })
         }
       );
-
       const data = await response.json();
-      setGeneratedLore(data.lore || "Something went wrong.");
-      setIsPlaying(true);
-      if (audio) audio.play();
-    } catch (error) {
-      setGeneratedLore("Something went wrong.");
+      setLore(data.lore);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to generate lore.");
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
   const handlePreviewAudio = async () => {
-    if (!generatedLore) return;
-    const firstWolfLine = generatedLore
-      .split("\n")
-      .find((line) => line.startsWith("Wolf:"));
-    if (!firstWolfLine) return;
-
-    setPreviewLoading(true);
+    setLoading(true);
+    setAudioUrl(null);
+    setError(null);
 
     try {
       const response = await fetch(
@@ -60,66 +46,100 @@ function App() {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text: firstWolfLine }),
+          body: JSON.stringify({ pseudo })
         }
       );
-
-      const blob = await response.blob();
-      const audioUrl = URL.createObjectURL(blob);
-      const preview = new Audio(audioUrl);
-      preview.play();
+      const data = await response.json();
+      setAudioUrl(data.audioUrl);
     } catch (err) {
-      alert("Wolf voice could not be summoned.");
+      console.error(err);
+      setError("Failed to load preview audio.");
     } finally {
-      setPreviewLoading(false);
+      setLoading(false);
     }
   };
 
   return (
-    <div className="App">
-      <video autoPlay muted loop id="bg-video">
-        <source src="/bg.mp4" type="video/mp4" />
-      </video>
+    <div className="relative h-screen w-screen overflow-hidden">
+      <ReactPlayer
+        url="/kindred-bg.mp4"
+        playing
+        loop
+        muted
+        width="100%"
+        height="100%"
+        style={{ position: "absolute", top: 0, left: 0, zIndex: -1 }}
+      />
 
-      <div className="overlay">
-        <h1>KINDRED LORE</h1>
-        <input
-          type="text"
-          placeholder="Your Summoner Name"
-          value={pseudo}
-          onChange={(e) => setPseudo(e.target.value)}
-        />
-        <select value={role} onChange={(e) => setRole(e.target.value)}>
-          <option value="top">Top</option>
-          <option value="jungle">Jungle</option>
-          <option value="mid">Mid</option>
-          <option value="adc">ADC</option>
-          <option value="support">Support</option>
-        </select>
-        <select value={genre} onChange={(e) => setGenre(e.target.value)}>
-          <option value="Man">Man</option>
-          <option value="Woman">Woman</option>
-        </select>
+      <div className="flex flex-col items-center justify-center h-full text-white bg-black bg-opacity-40 px-4">
+        <h1 className="text-3xl font-bold mb-6">Kindred Lore Generator</h1>
 
-        <button onClick={handleGenerate} disabled={isLoading}>
-          {isLoading ? "Summoning..." : "Generate my lore"}
-        </button>
+        <div className="mb-4 w-full max-w-md">
+          <input
+            type="text"
+            placeholder="Your Summoner Name"
+            value={pseudo}
+            onChange={(e) => setPseudo(e.target.value)}
+            className="w-full p-2 rounded text-black"
+          />
+        </div>
 
-        {generatedLore && (
-          <>
-            <pre className="lore">{generatedLore}</pre>
-            <button
-              onClick={handlePreviewAudio}
-              disabled={previewLoading || !generatedLore}
-              style={{ marginTop: "10px" }}
-            >
-              {previewLoading ? "Calling Wolf..." : "Generate Preview Audio"}
-            </button>
-          </>
+        <div className="flex space-x-4 mb-4">
+          <select
+            value={genre}
+            onChange={(e) => setGenre(e.target.value)}
+            className="p-2 rounded text-black"
+          >
+            <option value="Man">Man</option>
+            <option value="Woman">Woman</option>
+          </select>
+
+          <select
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+            className="p-2 rounded text-black"
+          >
+            <option value="top">Top</option>
+            <option value="jungle">Jungle</option>
+            <option value="mid">Mid</option>
+            <option value="adc">ADC</option>
+            <option value="support">Support</option>
+          </select>
+        </div>
+
+        <div className="flex space-x-4">
+          <button
+            onClick={handleLoreGeneration}
+            className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-800"
+          >
+            Generate Lore
+          </button>
+          <button
+            onClick={handlePreviewAudio}
+            className="bg-green-600 px-4 py-2 rounded hover:bg-green-800"
+          >
+            Generate Preview Audio
+          </button>
+        </div>
+
+        {loading && <div className="mt-4">Generating... please wait ⏳</div>}
+        {error && <div className="mt-4 text-red-400">{error}</div>}
+
+        {lore && (
+          <div className="mt-6 max-w-2xl bg-black bg-opacity-60 p-4 rounded shadow-md whitespace-pre-wrap text-sm">
+            {lore}
+          </div>
+        )}
+
+        {audioUrl && (
+          <audio controls className="mt-4">
+            <source src={audioUrl} type="audio/mpeg" />
+            Your browser does not support the audio element.
+          </audio>
         )}
       </div>
     </div>
   );
-}
+};
 
 export default App;
