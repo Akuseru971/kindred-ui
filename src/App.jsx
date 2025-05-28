@@ -1,102 +1,88 @@
 import React, { useState } from "react";
-import { Button } from "./components/ui/button";
-import LoadingBar from "./components/LoadingBar";
+import ReactPlayer from "react-player";
 import "./App.css";
+import LoadingBar from "./components/LoadingBar";
+import { Button } from "./components/Button";
 
 const App = () => {
   const [pseudo, setPseudo] = useState("");
   const [role, setRole] = useState("mid");
-  const [genre, setGenre] = useState("Man");
+  const [gender, setGender] = useState("Man");
   const [loading, setLoading] = useState(false);
   const [lore, setLore] = useState("");
   const [audioUrl, setAudioUrl] = useState("");
-  const [previewLoading, setPreviewLoading] = useState(false);
 
   const generateLore = async () => {
     setLoading(true);
-    setAudioUrl("");
-    const res = await fetch("https://lambandwolf-lore-app.onrender.com/api/lore", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ pseudo, role, genre }),
-    });
-
-    const data = await res.json();
-    setLore(data.lore || "No tale was found.");
+    try {
+      const res = await fetch("https://lambandwolf-lore-app.onrender.com/api/lore", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pseudo, role, genre: gender }),
+      });
+      const data = await res.json();
+      setLore(data.lore);
+    } catch (err) {
+      console.error(err);
+    }
     setLoading(false);
   };
 
-  const generatePreview = async () => {
-    setPreviewLoading(true);
-    setAudioUrl("");
-
-    const res = await fetch("https://lambandwolf-lore-app.onrender.com/api/preview", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ pseudo, role, genre }),
-    });
-
-    const blob = await res.blob();
-    const url = URL.createObjectURL(blob);
-    setAudioUrl(url);
-    setPreviewLoading(false);
+  const generatePreviewAudio = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch("https://lambandwolf-lore-app.onrender.com/api/preview-audio", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: lore }),
+      });
+      const data = await res.json();
+      setAudioUrl(data.audio);
+    } catch (err) {
+      console.error(err);
+    }
+    setLoading(false);
   };
 
   return (
     <div className="app">
-      <video autoPlay muted loop id="bgVideo">
-        <source src="/kindred-bg.mp4" type="video/mp4" />
-      </video>
-
+      <ReactPlayer
+        url="/kindred-bg.mp4"
+        playing
+        loop
+        muted
+        width="100%"
+        height="100%"
+        className="background-video"
+      />
       <div className="overlay">
         <h1 className="title">Kindred Lore Generator</h1>
-
-        <div className="form">
-          <input
-            type="text"
-            placeholder="Enter your summoner name"
-            value={pseudo}
-            onChange={(e) => setPseudo(e.target.value)}
-          />
-
-          <select value={genre} onChange={(e) => setGenre(e.target.value)}>
-            <option value="Man">Man</option>
-            <option value="Woman">Woman</option>
-          </select>
-
-          <select value={role} onChange={(e) => setRole(e.target.value)}>
-            <option value="top">Top</option>
-            <option value="jungle">Jungle</option>
-            <option value="mid">Mid</option>
-            <option value="adc">ADC</option>
-            <option value="support">Support</option>
-          </select>
-
-          <div className="buttons">
-            <Button onClick={generateLore} disabled={loading}>
-              {loading ? "Loading..." : "Generate my story"}
-            </Button>
-
-            <Button onClick={generatePreview} disabled={previewLoading}>
-              {previewLoading ? "Loading audio..." : "Generate preview audio"}
-            </Button>
-          </div>
-        </div>
-
+        <input
+          type="text"
+          placeholder="Enter your name"
+          value={pseudo}
+          onChange={(e) => setPseudo(e.target.value)}
+          className="input"
+        />
+        <select value={role} onChange={(e) => setRole(e.target.value)} className="input">
+          <option value="top">Top</option>
+          <option value="jungle">Jungle</option>
+          <option value="mid">Mid</option>
+          <option value="adc">ADC</option>
+          <option value="support">Support</option>
+        </select>
+        <select value={gender} onChange={(e) => setGender(e.target.value)} className="input">
+          <option value="Man">Man</option>
+          <option value="Woman">Woman</option>
+        </select>
+        <Button onClick={generateLore} disabled={loading}>Generate Lore</Button>
+        <Button onClick={generatePreviewAudio} disabled={loading || !lore}>Generate Preview Audio</Button>
         {loading && <LoadingBar />}
-
-        <div className="lore">
-          {lore && (
-            <pre>
-              {lore}
-            </pre>
-          )}
+        <div className="lore-box">
+          <pre>{lore}</pre>
         </div>
-
         {audioUrl && (
-          <audio controls autoPlay>
-            <source src={audioUrl} type="audio/mpeg" />
-          </audio>
+          <audio controls src={audioUrl} className="audio-player" />
         )}
       </div>
     </div>
