@@ -39,16 +39,16 @@ function App() {
       </video>
 
       <div className="overlay">
-        <h1>Kindred Lore Generator</h1>
+        <h1 className="title">Kindred Lore Generator</h1>
 
         <div className="input-group">
-          <select value={genre} onChange={(e) => setGenre(e.target.value)}>
+          <select value={genre} onChange={(e) => setGenre(e.target.value)} className="dropdown">
             <option value="">Select Gender</option>
             <option value="Man">Man</option>
             <option value="Woman">Woman</option>
           </select>
 
-          <select value={role} onChange={(e) => setRole(e.target.value)}>
+          <select value={role} onChange={(e) => setRole(e.target.value)} className="dropdown">
             <option value="">Select Role</option>
             <option value="top">Top</option>
             <option value="jungle">Jungle</option>
@@ -62,9 +62,10 @@ function App() {
             placeholder="Enter your summoner name"
             value={pseudo}
             onChange={(e) => setPseudo(e.target.value)}
+            className="input"
           />
 
-          <button onClick={generateLore} disabled={loading}>
+          <button onClick={generateLore} disabled={loading} className="button">
             {loading ? "Generating..." : "Generate My Lore"}
           </button>
         </div>

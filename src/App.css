@@ -1,72 +1,112 @@
-body, html, #root, .app-container {
+/* Reset */
+body, html, #root {
   margin: 0;
   padding: 0;
   height: 100%;
-  font-family: "Georgia", serif;
-  background-color: #000;
-  color: #fff;
-  overflow: hidden;
+  font-family: 'Segoe UI', sans-serif;
 }
 
+/* Background Video */
 .background-video {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   z-index: -1;
 }
 
-.content {
-  padding: 2rem;
-  max-width: 800px;
-  margin: 0 auto;
-  background: rgba(0, 0, 0, 0.7);
-  border-radius: 12px;
-  margin-top: 5%;
+/* Main Container */
+.app-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  position: relative;
 }
 
-select, input, button {
-  display: block;
-  width: 100%;
-  margin: 1rem 0;
-  padding: 0.75rem;
+/* Overlay with content */
+.overlay {
+  background: rgba(0, 0, 0, 0.65);
+  padding: 40px;
+  border-radius: 16px;
+  text-align: center;
+  color: white;
+  width: 90%;
+  max-width: 600px;
+}
+
+/* Title */
+.title {
+  font-size: 2rem;
+  margin-bottom: 24px;
+}
+
+/* Input group layout */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+/* Inputs and selects */
+.input,
+.dropdown {
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  font-size: 1rem;
+}
+
+/* Button */
+.button {
+  background-color: #7f5af0;
+  color: white;
+  padding: 12px;
+  font-size: 1rem;
   border: none;
   border-radius: 8px;
-  font-size: 1rem;
-  background: #222;
-  color: white;
-}
-
-button {
-  background-color: #444;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: background-color 0.3s ease;
 }
 
-button:hover {
-  background-color: #666;
+.button:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
 }
 
+.button:hover:enabled {
+  background-color: #6741d9;
+}
+
+/* Loading bar */
 .loading-bar {
-  height: 4px;
+  height: 6px;
+  background: linear-gradient(90deg, #7f5af0, #2cb67d);
   width: 100%;
-  background: linear-gradient(90deg, #fff, transparent);
-  animation: loading 1s linear infinite;
-  margin: 1rem 0;
   border-radius: 4px;
+  margin-bottom: 16px;
+  animation: loading 1.5s infinite linear;
 }
 
 @keyframes loading {
-  0% { background-position: 0% 50%; }
-  100% { background-position: 100% 50%; }
+  0% { transform: translateX(-100%); }
+  50% { transform: translateX(0); }
+  100% { transform: translateX(100%); }
 }
 
+/* Lore box */
 .lore-box {
-  background: rgba(255, 255, 255, 0.1);
-  padding: 1rem;
-  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  border-radius: 12px;
+  max-height: 300px;
+  overflow-y: auto;
   white-space: pre-wrap;
-  margin-top: 2rem;
+  text-align: left;
+  font-size: 1rem;
+  margin-top: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
