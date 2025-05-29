@@ -1,13 +1,10 @@
-/* App.css */
-
 body, html, #root {
   margin: 0;
   padding: 0;
+  width: 100%;
   height: 100%;
-  font-family: 'Cinzel', serif;
-  background-color: black;
+  font-family: 'Segoe UI', sans-serif;
   overflow: hidden;
-  color: white;
 }
 
 .background-video {
@@ -17,69 +14,66 @@ body, html, #root {
   width: 100vw;
   height: 100vh;
   object-fit: cover;
-  z-index: -2;
-}
-
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.7);
   z-index: -1;
 }
 
-.form-container {
+.app-container {
   position: relative;
-  z-index: 10;
-  padding: 2rem;
-  max-width: 600px;
-  margin: 0 auto;
-  text-align: center;
+  width: 100%;
+  height: 100%;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.form-container input,
-.form-container select,
-.form-container button {
-  display: block;
-  width: 100%;
-  margin: 1rem 0;
-  padding: 0.75rem;
+.form-container {
+  background: rgba(0, 0, 0, 0.65);
+  padding: 30px;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 500px;
+  width: 90%;
+}
+
+.title {
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.input, .select {
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+}
+
+.generate-button {
+  background-color: #8247e5;
+  color: white;
+  padding: 12px;
   font-size: 1rem;
   border: none;
   border-radius: 8px;
+  cursor: pointer;
 }
 
-textarea {
-  width: 100%;
-  height: 200px;
-  background: rgba(255, 255, 255, 0.05);
-  color: white;
-  border: none;
-  padding: 1rem;
+.generate-button:disabled {
+  background-color: #555;
+  cursor: not-allowed;
+}
+
+.lore-box {
+  background: #111;
+  padding: 16px;
   border-radius: 8px;
-  resize: none;
-}
-
-.loading-bar-container {
-  width: 100%;
-  height: 4px;
-  background: rgba(255, 255, 255, 0.2);
-  margin-top: 1rem;
-  position: relative;
-  overflow: hidden;
-  border-radius: 2px;
-}
-
-.loading-bar {
-  width: 100%;
-  height: 100%;
-  background: white;
-  animation: loading 1.5s infinite linear;
-}
-
-@keyframes loading {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+  white-space: pre-wrap;
+  max-height: 300px;
+  overflow-y: auto;
+  font-family: monospace;
+  font-size: 0.9rem;
 }
