@@ -35,36 +35,39 @@ function App() {
     <div className="app-container">
       <video autoPlay loop muted className="background-video">
         <source src="/kindred-bg.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
       </video>
 
-      <div className="content">
+      <div className="overlay">
         <h1>Kindred Lore Generator</h1>
 
-        <select value={genre} onChange={(e) => setGenre(e.target.value)}>
-          <option value="">Select Gender</option>
-          <option value="Man">Man</option>
-          <option value="Woman">Woman</option>
-        </select>
+        <div className="input-group">
+          <select value={genre} onChange={(e) => setGenre(e.target.value)}>
+            <option value="">Select Gender</option>
+            <option value="Man">Man</option>
+            <option value="Woman">Woman</option>
+          </select>
 
-        <select value={role} onChange={(e) => setRole(e.target.value)}>
-          <option value="">Select Role</option>
-          <option value="top">Top</option>
-          <option value="jungle">Jungle</option>
-          <option value="mid">Mid</option>
-          <option value="adc">ADC</option>
-          <option value="support">Support</option>
-        </select>
+          <select value={role} onChange={(e) => setRole(e.target.value)}>
+            <option value="">Select Role</option>
+            <option value="top">Top</option>
+            <option value="jungle">Jungle</option>
+            <option value="mid">Mid</option>
+            <option value="adc">ADC</option>
+            <option value="support">Support</option>
+          </select>
 
-        <input
-          type="text"
-          placeholder="Enter your summoner name"
-          value={pseudo}
-          onChange={(e) => setPseudo(e.target.value)}
-        />
+          <input
+            type="text"
+            placeholder="Enter your summoner name"
+            value={pseudo}
+            onChange={(e) => setPseudo(e.target.value)}
+          />
 
-        <button onClick={generateLore} disabled={loading}>
-          {loading ? "Generating..." : "Generate My Lore"}
-        </button>
+          <button onClick={generateLore} disabled={loading}>
+            {loading ? "Generating..." : "Generate My Lore"}
+          </button>
+        </div>
 
         {loading && <div className="loading-bar"></div>}
 
