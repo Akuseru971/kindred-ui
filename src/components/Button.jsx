@@ -1,14 +1,15 @@
-import React from "react";
-import "./Button.css"; // à créer pour les styles si tu veux
+.button {
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 2px solid white;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
 
-export const Button = ({ children, onClick, disabled }) => {
-  return (
-    <button
-      className="custom-button"
-      onClick={onClick}
-      disabled={disabled}
-    >
-      {children}
-    </button>
-  );
-};
+.button:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}

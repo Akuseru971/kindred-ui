@@ -1,19 +1,10 @@
-/* App.css */
-
-body, html {
+body, html, #root, .app-container {
   margin: 0;
   padding: 0;
   height: 100%;
-  font-family: 'Georgia', serif;
-  color: white;
-  background-color: black;
-  overflow: hidden;
-}
-
-.app-container {
-  position: relative;
-  height: 100vh;
-  width: 100vw;
+  font-family: "Georgia", serif;
+  background-color: #000;
+  color: #fff;
   overflow: hidden;
 }
 
@@ -25,74 +16,57 @@ body, html {
   height: 100vh;
   object-fit: cover;
   z-index: -1;
-  filter: brightness(0.3);
 }
 
 .content {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 90%;
-  max-width: 600px;
-  padding: 20px;
-  background-color: rgba(10, 10, 10, 0.6);
-  border-radius: 20px;
-  box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 12px;
+  margin-top: 5%;
 }
 
-input, select, textarea {
+select, input, button {
+  display: block;
   width: 100%;
-  padding: 12px;
-  margin-bottom: 16px;
+  margin: 1rem 0;
+  padding: 0.75rem;
   border: none;
-  border-radius: 12px;
-  font-size: 16px;
-  background-color: #1a1a1a;
+  border-radius: 8px;
+  font-size: 1rem;
+  background: #222;
   color: white;
 }
 
 button {
-  width: 100%;
-  padding: 12px;
-  border: none;
-  border-radius: 12px;
-  background-color: #7c3aed;
-  color: white;
-  font-weight: bold;
-  font-size: 16px;
+  background-color: #444;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background 0.3s;
 }
 
 button:hover {
-  background-color: #9f60f9;
+  background-color: #666;
 }
 
 .loading-bar {
-  height: 5px;
-  background: linear-gradient(to right, #7c3aed, #4c1d95);
-  animation: loading 2s infinite linear;
-  border-radius: 8px;
-  margin-top: 16px;
+  height: 4px;
+  width: 100%;
+  background: linear-gradient(90deg, #fff, transparent);
+  animation: loading 1s linear infinite;
+  margin: 1rem 0;
+  border-radius: 4px;
 }
 
 @keyframes loading {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
 }
 
 .lore-box {
-  margin-top: 20px;
-  padding: 20px;
-  background-color: rgba(26, 26, 26, 0.85);
-  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 1rem;
+  border-radius: 8px;
   white-space: pre-wrap;
-  font-style: italic;
-  font-size: 17px;
-  line-height: 1.6;
-  color: #dcdcdc;
-  max-height: 300px;
-  overflow-y: auto;
+  margin-top: 2rem;
 }
