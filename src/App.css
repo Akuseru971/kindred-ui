@@ -110,3 +110,9 @@ body, html, #root, .app-container {
   font-size: 1.1em;
   line-height: 1.5em;
 }
+
+select option {
+  color: #000;
+  background-color: #fff;
+}
+
