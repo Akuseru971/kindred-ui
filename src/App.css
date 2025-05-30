@@ -99,16 +99,13 @@ body, html, #root, .app-container {
 }
 
 .lore-box {
-  margin-top: 30px;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(255, 255, 255, 0.85); /* Légère opacité pour le texte */
   padding: 20px;
-  border-radius: 12px;
-  max-width: 800px;
-  width: 90%;
-  color: white;
+  border-radius: 8px;
+  max-height: 300px; /* Ajustable selon ta préférence */
+  overflow-y: auto; /* Active le scroll vertical */
   white-space: pre-wrap;
-  font-size: 1.1em;
-  line-height: 1.5em;
+  margin-top: 20px;
 }
 
 select option {
