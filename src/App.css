@@ -25,7 +25,7 @@ body, html, #root, .app-container {
   background-color: rgba(255, 255, 255, 0.7);
   padding: 2rem;
   border-radius: 8px;
-  max-width: 600px;
+  max-width: 700px;
   margin: 3rem auto;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
@@ -84,8 +84,8 @@ body, html, #root, .app-container {
   border: 1px solid #ccc;
   padding: 1rem;
   margin-top: 1rem;
-  max-height: 300px;
-  max-width: 400px;  /* changé de 300 à 400 */
+  max-height: 500px;       /* augmenté de 300 à 500 */
+  max-width: 600px;        /* augmenté de 400 à 600 */
   overflow-y: auto;
   white-space: pre-wrap;
   font-family: 'Courier New', Courier, monospace;
