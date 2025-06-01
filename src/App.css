@@ -84,7 +84,7 @@ body, html, #root, .app-container {
   border: 1px solid #ccc;
   padding: 1rem;
   margin-top: 1rem;
-  max-height: 300px;
+  max-height: 400px;
   overflow-y: auto;
   white-space: pre-wrap;
   font-family: 'Courier New', Courier, monospace;
