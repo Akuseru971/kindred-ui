@@ -22,6 +22,36 @@ function App() {
         body: JSON.stringify({ pseudo, role, genre }),
       });
 
+const handlePreviewAudio = async () => {
+  if (!pseudo || !role || !genre) return;
+  setLoading(true);
+
+  try {
+    const res = await fetch("https://lambandwolf-lore-app.onrender.com/api/preview-audio", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ pseudo, role, genre }),
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to generate audio preview");
+    }
+
+    const data = await res.json();
+    if (data.audioUrl) {
+      const audio = new Audio(data.audioUrl);
+      audio.play();
+    } else {
+      alert("No audio preview received.");
+    }
+  } catch (error) {
+    alert("An error occurred while generating the audio preview.");
+  } finally {
+    setLoading(false);
+  }
+};
       const data = await res.json();
       setLore(data.lore || "No lore received.");
     } catch (error) {
@@ -73,23 +103,13 @@ function App() {
             className="input"
           />
 
-          <button
-            onClick={generateLore}
-            disabled={loading}
-            className="button"
-          >
-            {loading ? "Generating..." : "Generate My Lore"}
-          </button>
-        </div>
+         <button onClick={generateLore} disabled={loading} className="button">
+  {loading ? "Generating..." : "Generate My Lore"}
+</button>
 
-        {loading && <div className="loading-bar"></div>}
+<button onClick={handlePreviewAudio} disabled={loading} className="button">
+  {loading ? "Loading..." : "Preview Audio"}
+</button>
 
-        <div className="lore-box">
-          <pre>{lore}</pre>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 export default App;
