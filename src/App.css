@@ -5,8 +5,8 @@ body, html, #root, .app-container {
   padding: 0;
   height: 100%;
   width: 100%;
-  font-family: 'Roboto', Arial, Helvetica, sans-serif; /* police moderne et épurée */
-  color: #333; /* gris foncé pour un texte lisible */
+  font-family: 'Roboto', Arial, Helvetica, sans-serif;
+  color: #333;
 }
 
 .background-video {
@@ -22,18 +22,18 @@ body, html, #root, .app-container {
 .overlay {
   position: relative;
   z-index: 2;
-  background-color: rgba(255, 255, 255, 0.7);
+  background-color: rgba(255, 255, 255, 0.8);
   padding: 2rem;
   border-radius: 8px;
   max-width: 700px;
   margin: 3rem auto;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .title {
   text-align: center;
   margin-bottom: 1rem;
-  color: #222; /* encore un texte foncé */
+  color: #222;
 }
 
 .input-group {
@@ -47,11 +47,13 @@ body, html, #root, .app-container {
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 1rem;
+  background-color: #f9f9f9; /* Ajout d'un fond légèrement contrasté */
 }
 
 .dropdown:focus, .input:focus {
   outline: none;
   border-color: #555;
+  background-color: #fff; /* Fond plus clair quand focus */
 }
 
 .button {
@@ -84,8 +86,8 @@ body, html, #root, .app-container {
   border: 1px solid #ccc;
   padding: 1rem;
   margin-top: 1rem;
-  max-height: 500px;       /* augmenté de 300 à 500 */
-  max-width: 600px;        /* augmenté de 400 à 600 */
+  max-height: 500px;
+  max-width: 500px;
   overflow-y: auto;
   white-space: pre-wrap;
   font-family: 'Courier New', Courier, monospace;
