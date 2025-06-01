@@ -86,12 +86,9 @@ body, html, #root, .app-container {
   margin-top: 1rem;
   max-height: 300px;
   max-width: 400px;  /* changé de 300 à 400 */
-}
-
   overflow-y: auto;
   white-space: pre-wrap;
   font-family: 'Courier New', Courier, monospace;
   color: #333;
   border-radius: 5px;
 }
-
