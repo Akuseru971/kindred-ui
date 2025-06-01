@@ -21,6 +21,7 @@ function App() {
         },
         body: JSON.stringify({ pseudo, role, genre }),
       });
+
       const data = await res.json();
       setLore(data.lore || "No lore received.");
     } catch (error) {
@@ -30,38 +31,33 @@ function App() {
     }
   };
 
-const handlePreviewAudio = async () => {
-  if (!pseudo || !role || !genre) return;
-  setLoading(true);
+  const handlePreviewAudio = async () => {
+    if (!pseudo || !role || !genre) return;
+    setLoading(true);
 
-  const text = `Tell me lamb, who is ${pseudo}?`;  // construis la phrase
+    try {
+      const res = await fetch("https://lambandwolf-lore-app.onrender.com/api/preview-audio", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ pseudo, role, genre }),
+      });
 
-  try {
-    const res = await fetch("https://lambandwolf-lore-app.onrender.com/api/preview-audio", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ text }),
-    });
+      if (!res.ok) {
+        throw new Error("Failed to generate audio preview");
+      }
 
-    if (!res.ok) {
-      throw new Error("Failed to generate audio preview");
-    }
-
-    const data = await res.json();
-    if (data.audioUrl) {
-      const audio = new Audio(data.audioUrl);
+      const blob = await res.blob();
+      const audioUrl = window.URL.createObjectURL(blob);
+      const audio = new Audio(audioUrl);
       audio.play();
-    } else {
-      alert("No audio preview received.");
+    } catch (error) {
+      alert("An error occurred while generating the audio preview.");
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    alert("An error occurred while generating the audio preview.");
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   return (
     <div className="app-container">
