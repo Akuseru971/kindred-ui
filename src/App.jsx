@@ -31,33 +31,36 @@ function App() {
     }
   };
 
-  const handlePreviewAudio = async () => {
-    if (!pseudo || !role || !genre) return;
-    setLoading(true);
+ const handlePreviewAudio = async () => {
+  if (!pseudo || !role || !genre) return;
+  setLoading(true);
 
-    try {
-      const res = await fetch("https://lambandwolf-lore-app.onrender.com/api/preview-audio", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ pseudo, role, genre }),
-      });
+  try {
+    const res = await fetch("https://lambandwolf-lore-app.onrender.com/api/preview-audio", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ pseudo, role, genre }),
+    });
 
-      if (!res.ok) {
-        throw new Error("Failed to generate audio preview");
-      }
-
-      const blob = await res.blob();
-      const audioUrl = window.URL.createObjectURL(blob);
-      const audio = new Audio(audioUrl);
-      audio.play();
-    } catch (error) {
-      alert("An error occurred while generating the audio preview.");
-    } finally {
-      setLoading(false);
+    if (!res.ok) {
+      throw new Error("Failed to generate audio preview");
     }
-  };
+
+    const blob = await res.blob();
+    const audioUrl = window.URL.createObjectURL(blob);
+    const audio = new Audio(audioUrl);
+    audio.play();
+
+    // ✅ Affiche la popup après avoir démarré l'audio
+    setShowOrderPopup(true);
+  } catch (error) {
+    alert("An error occurred while generating the audio preview.");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="app-container">
