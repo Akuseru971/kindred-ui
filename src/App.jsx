@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./App.css";
+import OrderPopup from "./OrderPopup"; // Assure-toi d’avoir ce fichier créé
 
 function App() {
   const [pseudo, setPseudo] = useState("");
@@ -7,6 +8,7 @@ function App() {
   const [genre, setGenre] = useState("");
   const [lore, setLore] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showOrderPopup, setShowOrderPopup] = useState(false);
 
   const generateLore = async () => {
     if (!pseudo || !role || !genre) return;
@@ -31,39 +33,47 @@ function App() {
     }
   };
 
-const handlePreviewAudio = async () => {
-  if (!pseudo || !role || !genre) return;
-  setLoading(true);
+  const handlePreviewAudio = async () => {
+    if (!pseudo || !role || !genre) return;
+    setLoading(true);
 
-  try {
-    const res = await fetch("https://lambandwolf-lore-app.onrender.com/api/preview-audio", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ pseudo, role, genre }),
-    });
+    try {
+      const res = await fetch("https://lambandwolf-lore-app.onrender.com/api/preview-audio", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ pseudo, role, genre }),
+      });
 
-    if (!res.ok) {
-      throw new Error("Failed to generate audio preview");
+      if (!res.ok) {
+        throw new Error("Failed to generate audio preview");
+      }
+
+      const blob = await res.blob();
+      const audioUrl = window.URL.createObjectURL(blob);
+      const audio = new Audio(audioUrl);
+      audio.play();
+
+      // Quand l'audio est terminé, ouvrir la popup
+      audio.onended = () => {
+        setShowOrderPopup(true);
+      };
+    } catch (error) {
+      alert("An error occurred while generating the audio preview.");
+    } finally {
+      setLoading(false);
     }
+  };
 
-    const blob = await res.blob();
-    const audioUrl = window.URL.createObjectURL(blob);
-    const audio = new Audio(audioUrl);
+  const handleCloseOrderPopup = () => {
+    setShowOrderPopup(false);
+  };
 
-    // Quand l'audio se termine, ouvrir la popup
-    audio.onended = () => {
-      setShowOrderPopup(true);
-    };
-
-    audio.play();
-  } catch (error) {
-    alert("An error occurred while generating the audio preview.");
-  } finally {
-    setLoading(false);
-  }
-};
+  const handleOrder = () => {
+    alert("Fonction de paiement à venir ! 🎉");
+    setShowOrderPopup(false);
+  };
 
   return (
     <div className="app-container">
@@ -115,6 +125,10 @@ const handlePreviewAudio = async () => {
             {loading ? "Loading..." : "Preview Audio"}
           </button>
         </div>
+
+        {showOrderPopup && (
+          <OrderPopup onClose={handleCloseOrderPopup} onOrder={handleOrder} />
+        )}
 
         {loading && <div className="loading-bar"></div>}
 
