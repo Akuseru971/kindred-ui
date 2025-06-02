@@ -31,7 +31,7 @@ function App() {
     }
   };
 
- const handlePreviewAudio = async () => {
+const handlePreviewAudio = async () => {
   if (!pseudo || !role || !genre) return;
   setLoading(true);
 
@@ -51,10 +51,13 @@ function App() {
     const blob = await res.blob();
     const audioUrl = window.URL.createObjectURL(blob);
     const audio = new Audio(audioUrl);
-    audio.play();
 
-    // ✅ Affiche la popup après avoir démarré l'audio
-    setShowOrderPopup(true);
+    // Quand l'audio se termine, ouvrir la popup
+    audio.onended = () => {
+      setShowOrderPopup(true);
+    };
+
+    audio.play();
   } catch (error) {
     alert("An error occurred while generating the audio preview.");
   } finally {
