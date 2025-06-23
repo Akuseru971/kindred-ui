@@ -1,56 +1,84 @@
+/* Vidéo en fond */
+.background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: -1;
+}
+
+/* Conteneur principal */
 .app {
   text-align: center;
   padding: 2rem;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-select, input {
-  margin: 0.5rem;
-  padding: 0.5rem;
-  font-size: 1rem;
-}
-
-button {
-  margin: 1rem;
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  background-color: #7c3aed;
   color: white;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  position: relative;
+  z-index: 1;
+}
+
+/* Titres */
+h1 {
+  font-size: 3rem;
+  margin-bottom: 2rem;
+  text-shadow: 0 0 10px black;
+}
+
+/* Inputs et selects */
+select,
+input {
+  display: block;
+  margin: 0.75rem auto;
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: none;
+  background-color: #ffffffdd;
+  color: #333;
+  max-width: 300px;
+  width: 100%;
+}
+
+/* Boutons */
+button {
+  display: block;
+  margin: 1rem auto;
+  padding: 0.75rem 1.5rem;
+  font-size: 1.1rem;
   border: none;
   border-radius: 8px;
+  background-color: #5b27c1;
+  color: white;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
 button:hover {
-  background-color: #5b21b6;
+  background-color: #431e92;
 }
 
-textarea {
-  margin-top: 1rem;
-  width: 100%;
-  max-width: 600px;
-  height: 200px;
-  font-size: 1rem;
-  padding: 1rem;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-}
-
+/* Bouton spécifique "Generate my video" */
 .order-button {
-  position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  background-color: #7c3aed;
-  color: white;
-  border: none;
-  border-radius: 100px;
-  padding: 1rem 2rem;
-  font-size: 1.1rem;
-  box-shadow: 0 0 15px rgba(0,0,0,0.2);
-  transition: background-color 0.3s ease;
+  background-color: #ff5050;
 }
 
 .order-button:hover {
-  background-color: #5b21b6;
+  background-color: #cc3d3d;
+}
+
+/* Zone de texte pour le lore */
+textarea {
+  margin-top: 1rem;
+  padding: 1rem;
+  width: 90%;
+  max-width: 700px;
+  border-radius: 12px;
+  border: none;
+  font-size: 1rem;
+  background-color: #ffffffcc;
+  color: #222;
+  resize: none;
+  line-height: 1.5;
 }
