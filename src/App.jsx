@@ -33,40 +33,45 @@ function App() {
   };
 
   return (
-    <div className="app">
-      <h1>Kindred Lore Generator</h1>
-      <select value={gender} onChange={(e) => setGender(e.target.value)}>
-        <option value="">Select Gender</option>
-        <option value="Man">Man</option>
-        <option value="Woman">Woman</option>
-      </select>
-      <select value={role} onChange={(e) => setRole(e.target.value)}>
-        <option value="">Select Role</option>
-        <option value="top">Top</option>
-        <option value="jungle">Jungle</option>
-        <option value="mid">Mid</option>
-        <option value="adc">ADC</option>
-        <option value="support">Support</option>
-      </select>
-      <input
-        type="text"
-        placeholder="Enter your summoner name"
-        value={pseudo}
-        onChange={(e) => setPseudo(e.target.value)}
-      />
-      <button onClick={handleGenerateLore} disabled={isLoading}>
-        {isLoading ? 'Generating...' : 'Generate My Lore'}
-      </button>
-      {lore && (
-        <>
-          <button onClick={handleOrderClick} className="order-button">
-            Generate my video
-          </button>
-          <textarea value={lore} readOnly rows={10} />
-        </>
-      )}
-      {showOrderPopup && <OrderPopup onClose={() => setShowOrderPopup(false)} />}
-    </div>
+    <>
+      <video autoPlay muted loop className="background">
+        <source src="/background.mp4" type="video/mp4" />
+      </video>
+      <div className="app">
+        <h1>Kindred Lore Generator</h1>
+        <select value={gender} onChange={(e) => setGender(e.target.value)}>
+          <option value="">Select Gender</option>
+          <option value="Man">Man</option>
+          <option value="Woman">Woman</option>
+        </select>
+        <select value={role} onChange={(e) => setRole(e.target.value)}>
+          <option value="">Select Role</option>
+          <option value="top">Top</option>
+          <option value="jungle">Jungle</option>
+          <option value="mid">Mid</option>
+          <option value="adc">ADC</option>
+          <option value="support">Support</option>
+        </select>
+        <input
+          type="text"
+          placeholder="Enter your summoner name"
+          value={pseudo}
+          onChange={(e) => setPseudo(e.target.value)}
+        />
+        <button onClick={handleGenerateLore} disabled={isLoading}>
+          {isLoading ? 'Generating...' : 'Generate My Lore'}
+        </button>
+        {lore && (
+          <>
+            <button onClick={handleOrderClick} className="order-button">
+              Generate my video
+            </button>
+            <textarea value={lore} readOnly rows={10} />
+          </>
+        )}
+        {showOrderPopup && <OrderPopup onClose={() => setShowOrderPopup(false)} />}
+      </div>
+    </>
   );
 }
 
