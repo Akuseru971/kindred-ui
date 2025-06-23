@@ -1,0 +1,96 @@
+/* App.css */
+
+body, html, #root, .app-container {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  font-family: 'Roboto', Arial, Helvetica, sans-serif;
+  color: #333;
+}
+
+.background-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+  min-height: 100%;
+  z-index: -1;
+  object-fit: cover;
+}
+
+.overlay {
+  position: relative;
+  z-index: 2;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 2rem;
+  border-radius: 8px;
+  max-width: 700px;
+  margin: 3rem auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #222;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.dropdown, .input, .button {
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  background-color: #f9f9f9; /* Ajout d'un fond légèrement contrasté */
+}
+
+.dropdown:focus, .input:focus {
+  outline: none;
+  border-color: #555;
+  background-color: #fff; /* Fond plus clair quand focus */
+}
+
+.button {
+  background-color: #333;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover {
+  background-color: #555;
+}
+
+.loading-bar {
+  height: 4px;
+  background: linear-gradient(90deg, #333, #555, #333);
+  background-size: 200% 200%;
+  animation: loading 2s linear infinite;
+  border-radius: 2px;
+  margin-top: 1rem;
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.lore-box {
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  padding: 1rem;
+  margin-top: 1rem;
+  max-height: 500px;
+  max-width: 700px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  font-family: 'Courier New', Courier, monospace;
+  color: #333;
+  border-radius: 5px;
+}

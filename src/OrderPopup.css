@@ -1,0 +1,79 @@
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.popup {
+  background: #111;
+  color: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  width: 90%;
+  max-width: 500px;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.popup h2 {
+  margin-bottom: 1rem;
+  font-size: 1.8rem;
+}
+
+.popup p {
+  font-size: 1rem;
+  margin-bottom: 2rem;
+}
+
+.popup-buttons {
+  display: flex;
+  justify-content: space-around;
+  gap: 1rem;
+}
+
+.popup-order-button,
+.popup-close-button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.popup-order-button {
+  background-color: #4caf50;
+  color: white;
+}
+
+.popup-order-button:hover {
+  background-color: #43a047;
+}
+
+.popup-close-button {
+  background-color: #f44336;
+  color: white;
+}
+
+.popup-close-button:hover {
+  background-color: #e53935;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
