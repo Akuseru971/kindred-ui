@@ -1,80 +1,56 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import './App.css';
-import OrderPopup from './OrderPopup';
-
-function App() {
-  const [gender, setGender] = useState('');
-  const [role, setRole] = useState('');
-  const [pseudo, setPseudo] = useState('');
-  const [lore, setLore] = useState('');
-  const [showOrderPopup, setShowOrderPopup] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleGenerateLore = async () => {
-    if (!gender || !role || !pseudo) return;
-    setIsLoading(true);
-    try {
-      const response = await axios.post('http://localhost:3001/generate-lore', {
-        gender,
-        role,
-        pseudo,
-      });
-      setLore(response.data.lore);
-    } catch (error) {
-      console.error('Error generating lore:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleOrderClick = () => {
-    setShowOrderPopup(true);
-  };
-
-  return (
-    <div className="app">
-      <h1 className="title">Kindred Lore Generator</h1>
-      <div className="form-group">
-        <select value={gender} onChange={(e) => setGender(e.target.value)}>
-          <option value="">Select Gender</option>
-          <option value="Man">Man</option>
-          <option value="Woman">Woman</option>
-        </select>
-
-        <select value={role} onChange={(e) => setRole(e.target.value)}>
-          <option value="">Select Role</option>
-          <option value="top">Top</option>
-          <option value="jungle">Jungle</option>
-          <option value="mid">Mid</option>
-          <option value="adc">ADC</option>
-          <option value="support">Support</option>
-        </select>
-
-        <input
-          type="text"
-          placeholder="Enter your summoner name"
-          value={pseudo}
-          onChange={(e) => setPseudo(e.target.value)}
-        />
-
-        <button onClick={handleGenerateLore} disabled={isLoading}>
-          {isLoading ? 'Generating...' : 'Generate My Lore'}
-        </button>
-      </div>
-
-      {lore && (
-        <>
-          <textarea value={lore} readOnly rows={10} className="lore-box" />
-          <button onClick={handleOrderClick} className="order-button">
-            Generate my video
-          </button>
-        </>
-      )}
-
-      {showOrderPopup && <OrderPopup onClose={() => setShowOrderPopup(false)} />}
-    </div>
-  );
+.app {
+  text-align: center;
+  padding: 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-export default App;
+select, input {
+  margin: 0.5rem;
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+
+button {
+  margin: 1rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  background-color: #7c3aed;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #5b21b6;
+}
+
+textarea {
+  margin-top: 1rem;
+  width: 100%;
+  max-width: 600px;
+  height: 200px;
+  font-size: 1rem;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.order-button {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background-color: #7c3aed;
+  color: white;
+  border: none;
+  border-radius: 100px;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  transition: background-color 0.3s ease;
+}
+
+.order-button:hover {
+  background-color: #5b21b6;
+}
