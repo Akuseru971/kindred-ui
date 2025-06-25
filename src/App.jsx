@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './App.css';
-import backgroundImage from './Kindred.png';
+const background = '/Kindred.png';
 
 function App() {
   const [gender, setGender] = useState('');
