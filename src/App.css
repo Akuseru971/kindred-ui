@@ -1,9 +1,9 @@
 .app-container {
   background-image: url("/Kindred.png");
-  background-size: contain; /* <-- dézoome en gardant les proportions */
+  background-size: 80%; /* ✅ agrandit un peu par rapport à contain */
   background-repeat: no-repeat;
   background-position: center;
-  background-color: black; /* couleur de fond si l’image ne couvre pas tout */
+  background-color: black;
   min-height: 100vh;
   display: flex;
   justify-content: center;
