@@ -35,9 +35,9 @@ function App() {
   return (
     <div className="app">
       {/* Fond vidéo */}
-      <video autoPlay muted loop className="background">
-        <source src="/background.mp4" type="video/mp4" />
-      </video>
+
+<div className="background"></div>
+
 
       <h1>Kindred Lore Generator</h1>
 
