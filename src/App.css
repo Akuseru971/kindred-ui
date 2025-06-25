@@ -1,13 +1,13 @@
 /* Fond image plein écran */
-.background {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  object-fit: cover;
-  z-index: -1;
-  filter: brightness(0.4);
+body {
+  margin: 0;
+  padding: 0;
+  background-image: url('./Kindred.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: black;
+  min-height: 100vh;
 }
 
 /* Conteneur principal */
@@ -25,21 +25,22 @@
   text-align: center;
 }
 
+/* Titre */
 h1 {
-  font-size: 2.5rem;
-  margin-bottom: 1.5rem;
+  font-size: 3rem;
+  margin-bottom: 2rem;
   text-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
 }
 
 /* Formulaires */
 select,
 input[type="text"] {
-  margin: 1rem 0;
+  margin: 0.8rem 0; /* plus d'espace entre les champs */
   padding: 0.8rem 1rem;
   font-size: 1rem;
   border-radius: 8px;
   border: none;
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.85);
   color: #333;
   width: 280px;
   max-width: 90%;
@@ -61,9 +62,18 @@ button:hover {
   background: #431e92;
 }
 
+.order-button {
+  background-color: #e63946;
+  margin-top: 1rem;
+}
+
+.order-button:hover {
+  background-color: #c92b3a;
+}
+
 /* Zone de texte pour le lore */
 textarea {
-  margin-top: 2rem;
+  margin-top: 1.5rem;
   padding: 1rem;
   width: 90%;
   max-width: 700px;
