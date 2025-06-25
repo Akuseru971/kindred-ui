@@ -1,44 +1,28 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import './App.css';
-import OrderPopup from './OrderPopup';
 
 function App() {
   const [gender, setGender] = useState('');
   const [role, setRole] = useState('');
-  const [pseudo, setPseudo] = useState('');
+  const [summonerName, setSummonerName] = useState('');
   const [lore, setLore] = useState('');
-  const [showOrderPopup, setShowOrderPopup] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
-  const handleGenerateLore = async () => {
-    if (!gender || !role || !pseudo) return;
-    setIsLoading(true);
-    try {
-      const response = await axios.post('http://localhost:3001/generate-lore', {
-        gender,
-        role,
-        pseudo,
-      });
-      setLore(response.data.lore);
-    } catch (error) {
-      console.error('Error generating lore:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const generateLore = async () => {
+    if (!summonerName || !role || !gender) return;
 
-  const handleOrderClick = () => {
-    setShowOrderPopup(true);
+    const response = await fetch('https://kindred-api.onrender.com/api/lore', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pseudo: summonerName, role, genre: gender }),
+    });
+
+    const data = await response.json();
+    setLore(data.lore);
   };
 
   return (
     <div className="app">
-      {/* Fond vidéo */}
-
-<div className="background"></div>
-
-
+      <img src="/Kindred.png" alt="Background" className="background" />
       <h1>Kindred Lore Generator</h1>
 
       <select value={gender} onChange={(e) => setGender(e.target.value)}>
@@ -59,24 +43,13 @@ function App() {
       <input
         type="text"
         placeholder="Enter your summoner name"
-        value={pseudo}
-        onChange={(e) => setPseudo(e.target.value)}
+        value={summonerName}
+        onChange={(e) => setSummonerName(e.target.value)}
       />
 
-      <button onClick={handleGenerateLore} disabled={isLoading}>
-        {isLoading ? 'Generating...' : 'Generate My Lore'}
-      </button>
+      <button onClick={generateLore}>Generate My Lore</button>
 
-      {lore && (
-        <>
-          <button onClick={handleOrderClick} className="order-button">
-            Generate my video
-          </button>
-          <textarea value={lore} readOnly rows={10} />
-        </>
-      )}
-
-      {showOrderPopup && <OrderPopup onClose={() => setShowOrderPopup(false)} />}
+      {lore && <textarea rows="12" readOnly value={lore} />}
     </div>
   );
 }
