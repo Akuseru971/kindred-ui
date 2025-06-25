@@ -1,88 +1,40 @@
-/* Fond image plein écran */
-body {
-  margin: 0;
-  padding: 0;
-  background-image: url('./Kindred.png');
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-color: black;
-  min-height: 100vh;
-}
-
-/* Conteneur principal */
-.app {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  padding: 2rem;
-  color: white;
-  font-family: 'Poppins', sans-serif;
-  text-align: center;
-}
-
-/* Titre */
-h1 {
-  font-size: 3rem;
-  margin-bottom: 2rem;
-  text-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
-}
-
-/* Formulaires */
+/* Formulaires améliorés */
 select,
 input[type="text"] {
-  margin: 0.8rem 0; /* plus d'espace entre les champs */
-  padding: 0.8rem 1rem;
+  margin: 0.6rem 0;
+  padding: 0.9rem 1.2rem;
   font-size: 1rem;
-  border-radius: 8px;
-  border: none;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   background: rgba(255, 255, 255, 0.85);
-  color: #333;
-  width: 280px;
+  color: #222;
+  width: 300px;
   max-width: 90%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+select:focus,
+input[type="text"]:focus {
+  outline: none;
+  box-shadow: 0 0 10px rgba(91, 39, 193, 0.6);
+  transform: scale(1.02);
 }
 
 button {
-  margin-top: 1.5rem;
-  padding: 0.8rem 2rem;
-  font-size: 1.1rem;
+  margin-top: 2rem;
+  padding: 1rem 2.2rem;
+  font-size: 1.2rem;
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   cursor: pointer;
   background: #5b27c1;
   color: white;
-  transition: background 0.3s ease;
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.25);
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
 button:hover {
   background: #431e92;
-}
-
-.order-button {
-  background-color: #e63946;
-  margin-top: 1rem;
-}
-
-.order-button:hover {
-  background-color: #c92b3a;
-}
-
-/* Zone de texte pour le lore */
-textarea {
-  margin-top: 1.5rem;
-  padding: 1rem;
-  width: 90%;
-  max-width: 700px;
-  border-radius: 12px;
-  border: none;
-  font-size: 1rem;
-  background-color: rgba(255, 255, 255, 0.85);
-  color: #222;
-  resize: none;
-  line-height: 1.5;
-  white-space: pre-wrap;
+  transform: scale(1.05);
 }
