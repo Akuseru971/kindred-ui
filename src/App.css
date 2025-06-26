@@ -81,4 +81,20 @@ html,
   padding: 20px;
   border-radius: 8px;
   border: 1px solid #e6cc80;
+  overflow: hidden;
+  min-height: 200px;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.lore-box span {
+  display: inline-block;
+  opacity: 0;
+  animation: reveal 0.04s forwards;
+}
+
+@keyframes reveal {
+  to {
+    opacity: 1;
+  }
 }
