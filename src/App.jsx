@@ -13,6 +13,7 @@ function App() {
   const handleGenerate = async () => {
     if (!pseudo || !gender || !role) return;
     setLore("");
+    setAnimatedLoreHTML("");
     setShowOrderButton(false);
     try {
       const res = await fetch("https://kindred-api.onrender.com/generate", {
@@ -21,8 +22,7 @@ function App() {
         body: JSON.stringify({ pseudo, gender, role })
       });
       const data = await res.json();
-      const loreText = data.lore;
-      animateLore(loreText);
+      animateLore(data.lore);
       setShowOrderButton(true);
     } catch (error) {
       console.error("Error generating lore:", error);
