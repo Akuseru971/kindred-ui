@@ -7,6 +7,7 @@ function App() {
   const [role, setRole] = useState("");
   const [pseudo, setPseudo] = useState("");
   const [lore, setLore] = useState("");
+  const [animatedLoreHTML, setAnimatedLoreHTML] = useState("");
   const [showOrderButton, setShowOrderButton] = useState(false);
 
   const handleGenerate = async () => {
@@ -32,8 +33,7 @@ function App() {
     const chars = text.split("").map((char, i) => (
       `<span class="lore-char" style="--delay:${i * 0.02}s">${char}</span>`
     ));
-    const box = document.getElementById("lore-box");
-    if (box) box.innerHTML = chars.join("");
+    setAnimatedLoreHTML(chars.join(""));
   };
 
   return (
@@ -72,7 +72,11 @@ function App() {
         <button className="generate-button" onClick={handleGenerate}>
           Generate my lore
         </button>
-        <div id="lore-box" className="lore-box"></div>
+        <div
+          id="lore-box"
+          className="lore-box"
+          dangerouslySetInnerHTML={{ __html: animatedLoreHTML }}
+        ></div>
         {showOrderButton && (
           <button className="order-button">
             Order my Lore video
