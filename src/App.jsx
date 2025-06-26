@@ -27,10 +27,10 @@ function App() {
       });
 
       const data = await response.json();
-
       animateText(data.lore);
     } catch (error) {
       console.error("Error generating lore:", error);
+      setIsGenerating(false);
     }
   };
 
@@ -43,6 +43,7 @@ function App() {
       const span = document.createElement("span");
       span.textContent = char;
       span.style.setProperty("--delay", `${index * 0.01}s`);
+      span.classList.add("lore-char");
       container.appendChild(span);
     });
 
