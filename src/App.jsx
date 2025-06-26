@@ -1,69 +1,50 @@
 import React, { useState } from "react";
+import backgroundImage from "./Kindred.png";
 import "./App.css";
-import KindredImage from "./Kindred.png";
 
 function App() {
-  const [pseudo, setPseudo] = useState("");
   const [gender, setGender] = useState("");
   const [role, setRole] = useState("");
+  const [pseudo, setPseudo] = useState("");
   const [lore, setLore] = useState("");
-  const [isGenerating, setIsGenerating] = useState(false);
   const [showOrderButton, setShowOrderButton] = useState(false);
 
-  const handleGenerateLore = async () => {
+  const handleGenerate = async () => {
     if (!pseudo || !gender || !role) return;
-
-    setIsGenerating(true);
     setLore("");
     setShowOrderButton(false);
-
     try {
-      const response = await fetch("https://kindred-generator-server.onrender.com/generate", {
+      const res = await fetch("https://kindred-api.onrender.com/generate", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ pseudo, gender, role }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pseudo, gender, role })
       });
-
-      const data = await response.json();
-      animateText(data.lore);
+      const data = await res.json();
+      const loreText = data.lore;
+      animateLore(loreText);
+      setShowOrderButton(true);
     } catch (error) {
       console.error("Error generating lore:", error);
-      setIsGenerating(false);
     }
   };
 
-  const animateText = (text) => {
-    const container = document.getElementById("lore-text");
-    if (!container) return;
-
-    container.innerHTML = "";
-    text.split("").forEach((char, index) => {
-      const span = document.createElement("span");
-      span.textContent = char;
-      span.style.setProperty("--delay", `${index * 0.01}s`);
-      span.classList.add("lore-char");
-      container.appendChild(span);
-    });
-
-    setTimeout(() => {
-      setShowOrderButton(true);
-      setIsGenerating(false);
-    }, text.length * 10);
+  const animateLore = (text) => {
+    const chars = text.split("").map((char, i) => (
+      `<span class="lore-char" style="--delay:${i * 0.02}s">${char}</span>`
+    ));
+    const box = document.getElementById("lore-box");
+    if (box) box.innerHTML = chars.join("");
   };
 
   return (
     <div className="app">
       <div className="background">
-        <img src={KindredImage} alt="Kindred" className="background-image" />
+        <img src={backgroundImage} alt="Background" className="background-image" />
       </div>
-
       <div className="form-container">
         <input
           className="form-input"
-          type="text"
-          placeholder="Enter your pseudo"
+          placeholder="Your name"
           value={pseudo}
           onChange={(e) => setPseudo(e.target.value)}
         />
@@ -72,7 +53,7 @@ function App() {
           value={gender}
           onChange={(e) => setGender(e.target.value)}
         >
-          <option value="">Select your gender</option>
+          <option value="" disabled>Choose gender</option>
           <option value="Man">Man</option>
           <option value="Woman">Woman</option>
         </select>
@@ -81,22 +62,21 @@ function App() {
           value={role}
           onChange={(e) => setRole(e.target.value)}
         >
-          <option value="">Select your role</option>
+          <option value="" disabled>Choose role</option>
           <option value="top">Top</option>
           <option value="mid">Mid</option>
           <option value="jungle">Jungle</option>
           <option value="adc">ADC</option>
           <option value="support">Support</option>
         </select>
-
-        <button className="generate-button" onClick={handleGenerateLore} disabled={isGenerating}>
-          {isGenerating ? "Generating..." : "Generate my Lore"}
+        <button className="generate-button" onClick={handleGenerate}>
+          Generate my lore
         </button>
-
-        <div id="lore-text" className="lore-box"></div>
-
+        <div id="lore-box" className="lore-box"></div>
         {showOrderButton && (
-          <button className="order-button">Order my Lore video</button>
+          <button className="order-button">
+            Order my Lore video
+          </button>
         )}
       </div>
     </div>
