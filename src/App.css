@@ -1,100 +1,105 @@
-body,
-html,
-#root {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+import React, { useState } from "react";
+import "./App.css";
+import KindredImage from "./Kindred.png";
+
+function App() {
+  const [pseudo, setPseudo] = useState("");
+  const [gender, setGender] = useState("");
+  const [role, setRole] = useState("");
+  const [lore, setLore] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [showOrderButton, setShowOrderButton] = useState(false);
+
+  const handleGenerateLore = async () => {
+    if (!pseudo || !gender || !role) return;
+
+    setIsGenerating(true);
+    setLore("");
+    setShowOrderButton(false);
+
+    try {
+      const response = await fetch("https://kindred-generator-server.onrender.com/generate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ pseudo, gender, role }),
+      });
+
+      const data = await response.json();
+
+      animateText(data.lore);
+    } catch (error) {
+      console.error("Error generating lore:", error);
+    }
+  };
+
+  const animateText = (text) => {
+    const container = document.getElementById("lore-text");
+    if (!container) return;
+
+    container.innerHTML = "";
+    text.split("").forEach((char, index) => {
+      const span = document.createElement("span");
+      span.textContent = char;
+      span.style.setProperty("--delay", `${index * 0.01}s`);
+      container.appendChild(span);
+    });
+
+    setTimeout(() => {
+      setShowOrderButton(true);
+      setIsGenerating(false);
+    }, text.length * 10);
+  };
+
+  return (
+    <div className="app">
+      <div className="background">
+        <img src={KindredImage} alt="Kindred" className="background-image" />
+      </div>
+
+      <div className="form-container">
+        <input
+          className="form-input"
+          type="text"
+          placeholder="Enter your pseudo"
+          value={pseudo}
+          onChange={(e) => setPseudo(e.target.value)}
+        />
+        <select
+          className="form-input"
+          value={gender}
+          onChange={(e) => setGender(e.target.value)}
+        >
+          <option value="">Select your gender</option>
+          <option value="Man">Man</option>
+          <option value="Woman">Woman</option>
+        </select>
+        <select
+          className="form-input"
+          value={role}
+          onChange={(e) => setRole(e.target.value)}
+        >
+          <option value="">Select your role</option>
+          <option value="top">Top</option>
+          <option value="mid">Mid</option>
+          <option value="jungle">Jungle</option>
+          <option value="adc">ADC</option>
+          <option value="support">Support</option>
+        </select>
+
+        <button className="generate-button" onClick={handleGenerateLore} disabled={isGenerating}>
+          {isGenerating ? "Generating..." : "Generate my Lore"}
+        </button>
+
+        <div id="lore-text" className="lore-box"></div>
+
+        {showOrderButton && (
+          <button className="order-button">Order my Lore video</button>
+        )}
+      </div>
+    </div>
+  );
 }
 
-.app {
-  position: relative;
-  height: 100vh;
-  width: 100vw;
-  overflow: hidden;
-}
-
-.background {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  z-index: -1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: black;
-}
-
-.background-image {
-  width: 55%;
-  height: auto;
-  opacity: 0.6;
-}
-
-.form-container {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 15px;
-  background-color: rgba(0, 0, 0, 0.75);
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-}
-
-.form-input {
-  padding: 10px;
-  width: 240px;
-  border-radius: 6px;
-  border: none;
-  font-size: 14px;
-}
-
-.generate-button,
-.order-button {
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #e6cc80;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.generate-button:hover,
-.order-button:hover {
-  background-color: #d1b85c;
-}
-
-.lore-box {
-  margin-top: 20px;
-  max-width: 600px;
-  color: white;
-  text-align: left;
-  white-space: pre-wrap;
-  background: rgba(0, 0, 0, 0.6);
-  padding: 20px;
-  border-radius: 8px;
-  border: 1px solid #e6cc80;
-  overflow: hidden;
-  min-height: 200px;
-  font-size: 16px;
-  line-height: 1.6;
-}
-
-.lore-box span {
-  display: inline-block;
-  opacity: 0;
-  animation: reveal 0.04s forwards;
-}
-
-@keyframes reveal {
-  to {
-    opacity: 1;
-  }
-}
+export default App;
