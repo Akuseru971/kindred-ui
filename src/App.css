@@ -1,43 +1,84 @@
-.app-container {
-  background-image: url("/Kindred.png");
-  background-size: 80%; /* ✅ agrandit un peu par rapport à contain */
-  background-repeat: no-repeat;
-  background-position: center;
-  background-color: black;
-  min-height: 100vh;
+body,
+html,
+#root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.app {
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+.background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: -1;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 40px;
+  background-color: black;
 }
 
-form {
-  background: rgba(0, 0, 0, 0.7);
-  padding: 30px;
-  border-radius: 16px;
+.background-image {
+  width: 55%;
+  height: auto;
+  opacity: 0.6;
+}
+
+.form-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  width: 100%;
-  max-width: 400px;
+  align-items: center;
+  gap: 15px;
+  background-color: rgba(0, 0, 0, 0.75);
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
 }
 
-input,
-select,
-button {
-  padding: 12px;
-  border-radius: 8px;
+.form-input {
+  padding: 10px;
+  width: 240px;
+  border-radius: 6px;
   border: none;
-  font-size: 1rem;
+  font-size: 14px;
 }
 
-button {
-  background-color: #1e1e1e;
-  color: white;
+.generate-button,
+.order-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #e6cc80;
+  border: none;
+  border-radius: 5px;
   cursor: pointer;
-  transition: background 0.3s;
 }
 
-button:hover {
-  background-color: #3a3a3a;
+.generate-button:hover,
+.order-button:hover {
+  background-color: #d1b85c;
+}
+
+.lore-box {
+  margin-top: 20px;
+  max-width: 600px;
+  color: white;
+  text-align: left;
+  white-space: pre-wrap;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #e6cc80;
 }
