@@ -7,13 +7,11 @@ function App() {
   const [role, setRole] = useState("");
   const [pseudo, setPseudo] = useState("");
   const [lore, setLore] = useState("");
-  const [animatedLoreHTML, setAnimatedLoreHTML] = useState("");
   const [showOrderButton, setShowOrderButton] = useState(false);
 
   const handleGenerate = async () => {
     if (!pseudo || !gender || !role) return;
     setLore("");
-    setAnimatedLoreHTML("");
     setShowOrderButton(false);
     try {
       const res = await fetch("https://kindred-api.onrender.com/generate", {
@@ -30,10 +28,16 @@ function App() {
   };
 
   const animateLore = (text) => {
-    const chars = text.split("").map((char, i) => (
-      `<span class="lore-char" style="--delay:${i * 0.02}s">${char}</span>`
-    ));
-    setAnimatedLoreHTML(chars.join(""));
+    let i = 0;
+    setLore("");
+    const interval = setInterval(() => {
+      setLore(prev => {
+        const next = prev + text[i];
+        i++;
+        if (i >= text.length) clearInterval(interval);
+        return next;
+      });
+    }, 15);
   };
 
   return (
@@ -72,11 +76,11 @@ function App() {
         <button className="generate-button" onClick={handleGenerate}>
           Generate my lore
         </button>
-        <div
-          id="lore-box"
-          className="lore-box"
-          dangerouslySetInnerHTML={{ __html: animatedLoreHTML }}
-        ></div>
+        <div className="lore-box">
+          {lore.split('').map((char, i) => (
+            <span key={i} className="lore-char" style={{ animationDelay: `${i * 0.02}s` }}>{char}</span>
+          ))}
+        </div>
         {showOrderButton && (
           <button className="order-button">
             Order my Lore video
