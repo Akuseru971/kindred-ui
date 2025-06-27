@@ -7,12 +7,14 @@ function App() {
   const [role, setRole] = useState("");
   const [pseudo, setPseudo] = useState("");
   const [lore, setLore] = useState("");
+  const [loading, setLoading] = useState(false);
   const [showOrderButton, setShowOrderButton] = useState(false);
 
   const handleGenerate = async () => {
     if (!pseudo || !gender || !role) return;
     setLore("");
     setShowOrderButton(false);
+    setLoading(true);
     try {
       const res = await fetch("https://kindred-api.onrender.com/generate", {
         method: "POST",
@@ -24,6 +26,8 @@ function App() {
       setShowOrderButton(true);
     } catch (error) {
       console.error("Error generating lore:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -73,9 +77,10 @@ function App() {
           <option value="adc">ADC</option>
           <option value="support">Support</option>
         </select>
-        <button className="generate-button" onClick={handleGenerate}>
-          Generate my lore
+        <button className="generate-button" onClick={handleGenerate} disabled={loading}>
+          {loading ? "Generating..." : "Generate my lore"}
         </button>
+        {loading && <div className="loader"></div>}
         <div className="lore-box">
           {lore.split('').map((char, i) => (
             <span key={i} className="lore-char" style={{ animationDelay: `${i * 0.02}s` }}>{char}</span>
